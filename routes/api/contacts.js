@@ -5,24 +5,24 @@ import { contactSchemaValidation } from "../../decorators/index.js";
 import { postSchema, putSchema } from "../../schemas/contacts-schemas.js";
 const router = express.Router();
 
-router.get("/", contactsController.listContacts);
+// router.get("/", contactsController.listContacts);
 
-router.get("/:id", contactsController.getById);
+// router.get("/:id", contactsController.getById);
 
-router.post(
-  "/",
-  isEmpty,
-  contactSchemaValidation(postSchema),
-  contactsController.addContact
-);
+// router.post(
+//   "/",
+//   isEmpty,
+//   contactSchemaValidation(postSchema),
+//   contactsController.addContact
+// );
 
-router.delete("/:id", contactsController.removeContact);
+// router.delete("/:id", contactsController.removeContact);
 
-router.put(
-  "/:id",
-  isEmpty,
-  contactSchemaValidation(putSchema),
-  contactsController.updateContact
-);
+// router.put(
+//   "/:id",
+//   isEmpty,
+//   contactSchemaValidation(putSchema),
+//   contactsController.updateContact
+// );
 
 export default router;
