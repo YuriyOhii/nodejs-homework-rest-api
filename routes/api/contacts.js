@@ -1,6 +1,10 @@
 import express from "express";
 import contactsController from "../../controllers/contacts.js";
-import { isEmpty, validateId } from "../../middlewars/index.js";
+import {
+  isEmpty,
+  validateId,
+  isEmptyForFavourite,
+} from "../../middlewars/index.js";
 import { contactSchemaValidation } from "../../decorators/index.js";
 import { postSchema, putSchema, Contact } from "../../models/Contact.js";
 const router = express.Router();
@@ -24,6 +28,12 @@ router.put(
   validateId,
   contactSchemaValidation(putSchema),
   contactsController.updateContact
+);
+router.patch(
+  "/:id/favourite",
+  isEmptyForFavourite,
+  validateId,
+  contactsController.updateStatusContact
 );
 
 export default router;
