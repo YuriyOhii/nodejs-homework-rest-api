@@ -9,20 +9,21 @@ router.get("/", contactsController.listContacts);
 
 router.get("/:id", validateId, contactsController.getById);
 
-// router.post(
-//   "/",
-//   isEmpty,
-//   contactSchemaValidation(postSchema),
-//   contactsController.addContact
-// );
+router.post(
+  "/",
+  isEmpty,
+  contactSchemaValidation(postSchema),
+  contactsController.addContact
+);
 
-// router.delete("/:id", contactsController.removeContact);
+router.delete("/:id", validateId, contactsController.removeContact);
 
-// router.put(
-//   "/:id",
-//   isEmpty,
-//   contactSchemaValidation(putSchema),
-//   contactsController.updateContact
-// );
+router.put(
+  "/:id",
+  isEmpty,
+  validateId,
+  contactSchemaValidation(putSchema),
+  contactsController.updateContact
+);
 
 export default router;

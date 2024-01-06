@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { Schema, model } from "mongoose";
+import { handleError400, updateOptions } from "./hooks.js";
 
 const postSchema = Joi.object({
   name: Joi.string().required().messages({
@@ -20,22 +21,28 @@ const putSchema = Joi.object({
   phone: Joi.string(),
 });
 
-const contactSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "Set name for contact"],
+const contactSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Set name for contact"],
+    },
+    email: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    favorite: {
+      type: Boolean,
+      default: false,
+    },
   },
-  email: {
-    type: String,
-  },
-  phone: {
-    type: String,
-  },
-  favorite: {
-    type: Boolean,
-    default: false,
-  },
-});
+  { versionKey: false, timestamps: true }
+);
+contactSchema.pre("findOneAndUpdate", updateOptions);
+contactSchema.post("save", handleError400);
+contactSchema.post("findOneAndUpdate", handleError400);
 
 const Contact = model("contacts", contactSchema);
 
