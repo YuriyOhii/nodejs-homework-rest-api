@@ -6,12 +6,8 @@ const postSchema = Joi.object({
   name: Joi.string().required().messages({
     "any.required": "Set name for contact",
   }),
-  email: Joi.string().messages({
-    "any.required": "missing required email field",
-  }),
-  phone: Joi.string().messages({
-    "any.required": "missing required phone field",
-  }),
+  email: Joi.string(),
+  phone: Joi.string(),
   favourite: Joi.boolean(),
 });
 
@@ -20,6 +16,11 @@ const putSchema = Joi.object({
   email: Joi.string(),
   phone: Joi.string(),
 });
+
+const patchFavouriteSchema = Joi.object({
+  favourite: Joi.boolean().required(),
+
+})
 
 const contactSchema = new Schema(
   {
@@ -38,12 +39,12 @@ const contactSchema = new Schema(
       default: false,
     },
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false }
 );
 contactSchema.pre("findOneAndUpdate", updateOptions);
 contactSchema.post("save", handleError400);
 contactSchema.post("findOneAndUpdate", handleError400);
 
-const Contact = model("contacts", contactSchema);
+const Contact = model("contact", contactSchema);
 
-export { Contact, postSchema, putSchema };
+export { Contact, postSchema, putSchema, patchFavouriteSchema };

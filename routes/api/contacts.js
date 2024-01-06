@@ -6,7 +6,7 @@ import {
   isEmptyForFavourite,
 } from "../../middlewars/index.js";
 import { contactSchemaValidation } from "../../decorators/index.js";
-import { postSchema, putSchema, Contact } from "../../models/Contact.js";
+import { postSchema, putSchema, patchFavouriteSchema } from "../../models/Contact.js";
 const router = express.Router();
 
 router.get("/", contactsController.listContacts);
@@ -33,6 +33,7 @@ router.patch(
   "/:id/favourite",
   isEmptyForFavourite,
   validateId,
+  contactSchemaValidation(patchFavouriteSchema),
   contactsController.updateStatusContact
 );
 
