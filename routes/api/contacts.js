@@ -1,13 +1,17 @@
 import express from "express";
 import contactsController from "../../controllers/contacts.js";
-import { isEmpty } from "../../middlewars/index.js";
+import {
+  isEmpty,
+  validateId,
+  isEmptyForFavourite,
+} from "../../middlewars/index.js";
 import { contactSchemaValidation } from "../../decorators/index.js";
-import { postSchema, putSchema } from "../../schemas/contacts-schemas.js";
+import { postSchema, putSchema, patchFavouriteSchema } from "../../models/Contact.js";
 const router = express.Router();
 
 router.get("/", contactsController.listContacts);
 
-router.get("/:id", contactsController.getById);
+router.get("/:id", validateId, contactsController.getById);
 
 router.post(
   "/",
@@ -16,13 +20,21 @@ router.post(
   contactsController.addContact
 );
 
-router.delete("/:id", contactsController.removeContact);
+router.delete("/:id", validateId, contactsController.removeContact);
 
 router.put(
   "/:id",
   isEmpty,
+  validateId,
   contactSchemaValidation(putSchema),
   contactsController.updateContact
+);
+router.patch(
+  "/:id/favourite",
+  isEmptyForFavourite,
+  validateId,
+  contactSchemaValidation(patchFavouriteSchema),
+  contactsController.updateStatusContact
 );
 
 export default router;
