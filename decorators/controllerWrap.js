@@ -1,4 +1,4 @@
-const contactControllerWrap = (ctrl) => {
+const controllerWrap = (ctrl) => {
   return async (req, res, next) => {
     try {
       await ctrl(req, res);
@@ -8,4 +8,4 @@ const contactControllerWrap = (ctrl) => {
   };
 };
 
-export default contactControllerWrap;
+export default controllerWrap;

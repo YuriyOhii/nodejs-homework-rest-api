@@ -1,5 +1,5 @@
 import { HttpError } from "../helpers/index.js";
-import { contactControllerWrap } from "../decorators/index.js";
+import { controllerWrap } from "../decorators/index.js";
 import { Contact } from "../models/Contact.js";
 
 const listContacts = async (req, res) => {
@@ -41,10 +41,10 @@ const updateStatusContact = async (req, res) => {
 };
 
 export default {
-  listContacts: contactControllerWrap(listContacts),
-  getById: contactControllerWrap(getContactById),
-  addContact: contactControllerWrap(addContact),
-  removeContact: contactControllerWrap(removeContact),
-  updateContact: contactControllerWrap(updateContact),
-  updateStatusContact: contactControllerWrap(updateStatusContact),
+  listContacts: controllerWrap(listContacts),
+  getById: controllerWrap(getContactById),
+  addContact: controllerWrap(addContact),
+  removeContact: controllerWrap(removeContact),
+  updateContact: controllerWrap(updateContact),
+  updateStatusContact: controllerWrap(updateStatusContact),
 };

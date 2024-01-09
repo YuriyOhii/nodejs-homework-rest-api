@@ -1,6 +1,6 @@
 import { HttpError } from "../helpers/index.js";
 
-const contactSchemaValidation = (schema) => {
+const routeSchemaValidation = (schema) => {
   return (req, res, next) => {
     const { error } = schema.validate(req.body);
     if (error) return next(HttpError(400, error.message));
@@ -8,4 +8,4 @@ const contactSchemaValidation = (schema) => {
   };
 };
 
-export default contactSchemaValidation;
+export default routeSchemaValidation;

@@ -1,2 +1,2 @@
-export { default as contactControllerWrap } from "./contactControllerWrap.js";
-export { default as contactSchemaValidation } from "./contactSchemaValidation.js";
+export { default as controllerWrap } from "./controllerWrap.js";
+export { default as routeSchemaValidation } from "./routeSchemaValidation.js";

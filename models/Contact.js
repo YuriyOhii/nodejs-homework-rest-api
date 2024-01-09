@@ -19,8 +19,7 @@ const putSchema = Joi.object({
 
 const patchFavouriteSchema = Joi.object({
   favourite: Joi.boolean().required(),
-
-})
+});
 
 const contactSchema = new Schema(
   {
