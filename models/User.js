@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import Joi from "joi";
-import {handleError400} from './hooks.js'
+import { handleError400 } from "./hooks.js";
 
 const subscription = ["starter", "pro", "business"];
 
@@ -25,9 +25,7 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-userSchema.post('save', handleError400);
-
-
+userSchema.post("save", handleError400);
 
 const userRegisterSchema = Joi.object({
   password: Joi.string().required(),
