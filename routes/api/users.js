@@ -7,13 +7,13 @@ import { userLoginSchema, userRegisterSchema } from "../../models/User.js";
 const userRouter = express.Router();
 
 userRouter.post(
-  "/user/register",
+  "/register",
   isEmpty,
-  routeSchemaValidation(userRegisterSchema),
+  // routeSchemaValidation(userRegisterSchema),
   controller.register
 );
 userRouter.post(
-  "/user/login",
+  "/login",
   isEmpty,
   routeSchemaValidation(userLoginSchema),
   controller.login
