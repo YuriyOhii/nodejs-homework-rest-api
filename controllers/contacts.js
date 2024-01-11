@@ -3,10 +3,12 @@ import { controllerWrap } from "../decorators/index.js";
 import { Contact } from "../models/Contact.js";
 
 const listContacts = async (req, res) => {
-  const { page, limit } = req.query;
+  const { page, limit, favorite } = req.query;
   const skip = (page - 1) * limit;
   const owner = req.user._id;
-  const result = await Contact.find({ owner }, "-favorite -owner", {
+  const queryObj = favorite ? { owner, favorite } : { owner };
+
+  const result = await Contact.find(queryObj, "-favorite -owner", {
     limit,
     skip,
   });

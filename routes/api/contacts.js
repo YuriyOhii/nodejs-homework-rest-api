@@ -34,7 +34,7 @@ router.put(
   contactsController.updateContact
 );
 router.patch(
-  "/:id/favourite",
+  "/:id/favorite",
   isEmptyForFavourite,
   validateId,
   routeSchemaValidation(patchFavouriteSchema),
