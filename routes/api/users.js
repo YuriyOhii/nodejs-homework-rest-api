@@ -1,6 +1,6 @@
 import express from "express";
 import controller from "../../controllers/users.js";
-import { isEmpty } from "../../middlewars/index.js";
+import { isEmpty, authorization } from "../../middlewars/index.js";
 import { routeSchemaValidation } from "../../decorators/index.js";
 import { userLoginSchema, userRegisterSchema } from "../../models/User.js";
 
@@ -9,7 +9,7 @@ const userRouter = express.Router();
 userRouter.post(
   "/register",
   isEmpty,
-  // routeSchemaValidation(userRegisterSchema),
+  routeSchemaValidation(userRegisterSchema),
   controller.register
 );
 userRouter.post(
@@ -18,5 +18,7 @@ userRouter.post(
   routeSchemaValidation(userLoginSchema),
   controller.login
 );
+userRouter.post("/logout", authorization, controller.logout);
+userRouter.get("/current", authorization, controller.getCurrent);
 
 export default userRouter;
