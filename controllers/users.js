@@ -53,9 +53,18 @@ const getCurrent = (req, res) => {
   res.json({ email, subscription });
 };
 
+const updateSubscription = async (req, res) => {
+  console.log("START UPDATE");
+  const { _id } = req.user;
+  const result = await User.findByIdAndUpdate(_id, req.body);
+  if (!result) throw HttpError(404, "Not found");
+  res.json(result);
+};
+
 export default {
   register: controllerWrap(register),
   login: controllerWrap(login),
   logout: controllerWrap(logout),
   getCurrent: controllerWrap(getCurrent),
+  updateSubscription: controllerWrap(updateSubscription),
 };

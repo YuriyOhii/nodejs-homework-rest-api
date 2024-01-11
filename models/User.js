@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import Joi from "joi";
-import { handleError400 } from "./hooks.js";
+import { handleError400, updateOptions } from "./hooks.js";
 
 const subscription = ["starter", "pro", "business"];
 
@@ -26,6 +26,7 @@ const userSchema = new Schema(
 );
 
 userSchema.post("save", handleError400);
+userSchema.pre("findOneAndUpdate", updateOptions);
 
 const userRegisterSchema = Joi.object({
   password: Joi.string().required(),
@@ -38,6 +39,17 @@ const userLoginSchema = Joi.object({
   email: Joi.string().email().required(),
 });
 
+const userUpdateSubscriptionSchema = Joi.object({
+  subscription: Joi.string()
+    .valid(...subscription)
+    .required(),
+});
+
 const User = model("users", userSchema);
 
-export { User, userLoginSchema, userRegisterSchema };
+export {
+  User,
+  userLoginSchema,
+  userRegisterSchema,
+  userUpdateSubscriptionSchema,
+};
