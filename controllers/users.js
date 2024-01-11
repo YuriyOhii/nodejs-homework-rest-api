@@ -1,15 +1,17 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
+
 import { User } from "../models/User.js";
 import { HttpError } from "../helpers/index.js";
 import { controllerWrap } from "../decorators/index.js";
-import jwt from "jsonwebtoken";
-import "dotenv/config";
 
 const { JWT_SECRET } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+
   if (user) {
     throw HttpError(409, "Email in use");
   }
@@ -27,7 +29,7 @@ const login = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
   const validatedPassword = await bcrypt.compare(password, user.password);
-  console.log("validation Password:", validatedPassword);
+
   if (!validatedPassword) {
     throw HttpError(401, "Email or password is wrong");
   }
@@ -47,18 +49,15 @@ const logout = async (req, res) => {
 };
 
 const getCurrent = (req, res) => {
-  console.log(req.user);
   const { email, subscription } = req.user;
-
   res.json({ email, subscription });
 };
 
 const updateSubscription = async (req, res) => {
-  console.log("START UPDATE");
   const { _id } = req.user;
   const result = await User.findByIdAndUpdate(_id, req.body);
   if (!result) throw HttpError(404, "Not found");
-  res.json(result);
+  res.json({ email: result.email, subscription: result.subscription });
 };
 
 export default {
