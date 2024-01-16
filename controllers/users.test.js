@@ -17,6 +17,10 @@ console.log(TEST_DB_HOST);
 
 describe("test/api/users/login", () => {
   let server = null;
+  const userLogin = {
+    email: "test@mail.com",
+    password: "123456",
+  };
 
   beforeAll(async () => {
     await mongoose.connect(TEST_DB_HOST);
@@ -43,33 +47,23 @@ describe("test/api/users/login", () => {
   });
 
   test("enter correct login data => response statusCode = 200", async () => {
-    const userLogin = {
-      email: "test@mail.com",
-      password: "123456",
-    };
     const { statusCode } = await request(app)
       .post("/api/users/login")
       .send(userLogin);
+
     expect(statusCode).toBe(200);
   });
 
   test("enter correct login data => response contains token", async () => {
-    const userLogin = {
-      email: "test@mail.com",
-      password: "123456",
-    };
     const { body } = await request(app)
       .post("/api/users/login")
       .send(userLogin);
     const token = jwt.verify(body.token, JWT_SECRET);
+
     expect(typeof token).toBe("object");
   });
 
-  test("enter correct login data => response is an object user, that contains 2 keys - 'email' and 'subscription' as string", async () => {
-    const userLogin = {
-      email: "test@mail.com",
-      password: "123456",
-    };
+  test("enter correct login data => response is an object user, that contains 2 keys - 'email' and 'subscription' with data of string type", async () => {
     const { body } = await request(app)
       .post("/api/users/login")
       .send(userLogin);

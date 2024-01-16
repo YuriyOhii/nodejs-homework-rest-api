@@ -72,11 +72,13 @@ const updateSubscription = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: oldPath, filename } = req.file;
-
   const newPath = path.join(tempPath, filename);
+
   await fs.rename(oldPath, newPath);
+
   const avatarURL = path.join(tempPath, filename);
   const result = await User.findByIdAndUpdate(_id, avatarURL);
+  
   if (!result) throw HttpError(404, "Not found");
   res.json({ avatarURL });
 };
