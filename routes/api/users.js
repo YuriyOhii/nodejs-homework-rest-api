@@ -1,6 +1,11 @@
 import express from "express";
 import controller from "../../controllers/users.js";
-import { isEmpty, authorization } from "../../middlewars/index.js";
+import {
+  isEmpty,
+  authorization,
+  upload,
+  resizeWithJimp,
+} from "../../middlewars/index.js";
 import { routeSchemaValidation } from "../../decorators/index.js";
 import {
   userLoginSchema,
@@ -30,6 +35,13 @@ userRouter.patch(
   routeSchemaValidation(userUpdateSubscriptionSchema),
   authorization,
   controller.updateSubscription
+);
+userRouter.patch(
+  "/avatars",
+  upload.single("avatar"),
+  resizeWithJimp,
+  authorization,
+  controller.updateAvatar
 );
 
 export default userRouter;
