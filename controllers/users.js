@@ -78,7 +78,7 @@ const updateAvatar = async (req, res) => {
 
   const avatarURL = path.join(tempPath, filename);
   const result = await User.findByIdAndUpdate(_id, avatarURL);
-  
+
   if (!result) throw HttpError(404, "Not found");
   res.json({ avatarURL });
 };
