@@ -2,6 +2,7 @@ import express from "express";
 import controller from "../../controllers/users.js";
 import {
   isEmpty,
+  isNoAvatar,
   authorization,
   upload,
   resizeWithJimp,
@@ -39,6 +40,7 @@ userRouter.patch(
 userRouter.patch(
   "/avatars",
   upload.single("avatar"),
+  isNoAvatar,
   resizeWithJimp,
   authorization,
   controller.updateAvatar
