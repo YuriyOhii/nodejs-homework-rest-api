@@ -30,7 +30,7 @@ const register = async (req, res) => {
     verificationToken,
   });
   const verificationEmail = getVerifyEmail(email, verificationToken);
-  sendEmail(verificationEmail);
+  await sendEmail(verificationEmail);
   res
     .status(201)
     .json({ email: result.email, subscription: result.subscription });
@@ -118,7 +118,7 @@ const resendVerifyEmail = async (req, res) => {
 
   const verificationEmail = getVerifyEmail(email, user.verificationToken);
 
-  sendEmail(verificationEmail);
+  await sendEmail(verificationEmail);
   res.json({ message: "Verification email was sent to your email" });
 };
 
