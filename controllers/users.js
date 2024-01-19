@@ -3,10 +3,11 @@ import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
 import fs from "fs/promises";
 import path from "path";
+import { nanoid } from "nanoid";
 import "dotenv/config";
 
 import { User } from "../models/User.js";
-import { HttpError } from "../helpers/index.js";
+import { HttpError, sendEmail, getVerifyEmail } from "../helpers/index.js";
 import { controllerWrap } from "../decorators/index.js";
 
 const { JWT_SECRET } = process.env;
@@ -21,11 +22,15 @@ const register = async (req, res) => {
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email, { s: "250" });
+  const verificationToken = nanoid();
   const result = await User.create({
     ...req.body,
     password: hashedPassword,
     avatarURL,
+    verificationToken,
   });
+  const verificationEmail = getVerifyEmail(email, verificationToken);
+  sendEmail(verificationEmail);
   res
     .status(201)
     .json({ email: result.email, subscription: result.subscription });
@@ -36,6 +41,9 @@ const login = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
+  }
+  if (user.verify === false) {
+    throw HttpError(401, "Email is not verified");
   }
   const validatedPassword = await bcrypt.compare(password, user.password);
 
@@ -83,6 +91,37 @@ const updateAvatar = async (req, res) => {
   res.json({ avatarURL });
 };
 
+const verifyEmail = async (req, res) => {
+  const { verificationToken } = req.params;
+  const user = await User.findOne({ verificationToken });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+  await User.findOneAndUpdate(
+    { verificationToken },
+    { verificationToken: null, verify: true }
+  );
+  res.json({
+    message: "Verification successful",
+  });
+};
+
+const resendVerifyEmail = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+  if (user.verify === true) {
+    throw HttpError(400, "Verification has already been passed");
+  }
+
+  const verificationEmail = getVerifyEmail(email, user.verificationToken);
+
+  sendEmail(verificationEmail);
+  res.json({ message: "Verification email was sent to your email" });
+};
+
 export default {
   register: controllerWrap(register),
   login: controllerWrap(login),
@@ -90,4 +129,6 @@ export default {
   getCurrent: controllerWrap(getCurrent),
   updateSubscription: controllerWrap(updateSubscription),
   updateAvatar: controllerWrap(updateAvatar),
+  verifyEmail: controllerWrap(verifyEmail),
+  resendVerifyEmail: controllerWrap(resendVerifyEmail),
 };

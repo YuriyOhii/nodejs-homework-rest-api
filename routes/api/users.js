@@ -12,6 +12,7 @@ import {
   userLoginSchema,
   userRegisterSchema,
   userUpdateSubscriptionSchema,
+  userEmailResendingSchema,
 } from "../../models/User.js";
 
 const userRouter = express.Router();
@@ -28,8 +29,16 @@ userRouter.post(
   routeSchemaValidation(userLoginSchema),
   controller.login
 );
+userRouter.post(
+  "/verify",
+  isEmpty,
+  routeSchemaValidation(userEmailResendingSchema),
+  controller.resendVerifyEmail
+);
+
 userRouter.post("/logout", authorization, controller.logout);
 userRouter.get("/current", authorization, controller.getCurrent);
+userRouter.get("/verify/:verificationToken", controller.verifyEmail);
 userRouter.patch(
   "/",
   isEmpty,
